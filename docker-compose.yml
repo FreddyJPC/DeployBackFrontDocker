@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    image: myapp:latest          # Imagen del backend creada previamente
+    container_name: backend_container
+    build:
+      context: ./backend         # Cambiar esto por la carpeta donde se encuentra el Dockerfile del backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_container/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    networks:
+      - app_network
+    ports:
+      - "8081:8081"
+
+  frontend:
+    image: myappfe:latest        # Imagen del frontend creada previamente
+    container_name: frontend_container
+    build:
+      context: ./frontend        # Cambiar esto por la carpeta donde se encuentra el Dockerfile del frontend
+    environment:
+      REACT_APP_API_URL: http://backend_container:8081/users
+    networks:
+      - app_network
+    ports:
+      - "3000:3000"
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    networks:
+      - app_network
+    ports:
+      - "5432:5432"
+
+networks:
+  app_network:
+    driver: bridge

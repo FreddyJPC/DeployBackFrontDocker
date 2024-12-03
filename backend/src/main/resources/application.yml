@@ -1,0 +1,23 @@
+server:
+  port: 8081
+  error:
+    include-message: always
+
+spring:
+  # Configuración de migración
+  flyway:
+    enabled: true
+    baselineVersion: 1
+    locations:
+      - classpath:db/migration
+    sqlMigrationSuffixes: .sql
+    baselineOnMigrate: true
+    sqlMigrationPrefix: V
+    schemas: public
+
+  # Conexión a base de datos
+  datasource:
+    url: jdbc:postgresql://postgres_container:5432/mydatabase  # Reemplaza con el nombre del contenedor y la base de datos configurada
+    username: myuser                                          # Reemplaza con el nombre de usuario configurado en PostgreSQL
+    password: mypassword                                      # Reemplaza con la contraseña configurada en PostgreSQL
+    driverClassName: org.postgresql.Driver
